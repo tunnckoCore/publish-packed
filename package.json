@@ -34,7 +34,7 @@
   "dependencies": {
     "@types/fs-extra": "^5.0.0",
     "@types/node": "^10.9.4",
-    "all-module-paths": "^0.7.1",
+    "all-module-paths": "^0.8.0",
     "execa": "^3.2.0",
     "fs-extra": "^7.0.0",
     "nm-prune": "^4.0.0",
@@ -46,13 +46,17 @@
   },
   "devDependencies": {
     "dargs": "^7.0.0",
+    "global-dirs": "^2.0.0",
+    "npm-cli-path": "^4.0.0",
     "npm-run-all": "^4.1.2",
+    "npm-run-path": "^4.0.0",
     "p-map-series": "^2.1.0",
     "package-preview": "^2.0.0",
     "tape": "^4.8.0",
     "tape-await": "^0.1.2",
     "ts-node": "^8.0.0",
     "typescript": "^3.0.0",
-    "verdaccio": "^4.0.0"
+    "verdaccio": "^4.0.0",
+    "which": "^2.0.1"
   }
 }
