@@ -1,16 +1,13 @@
 import fs = require('fs')
-import path = require('path')
 import mod = require('module')
+import path = require('path')
 
-// @ts-ignore
 import execa = require('execa')
-
-// @ts-ignore
 import allModulePaths = require('all-module-paths')
 
 export type Options = { paths?: string[] } & {
   tag?: string,
-  run?: typeof run,
+  run?: typeof defaultCliRunner,
   npmClient?: string,
   prune?: boolean,
   verbose?: boolean,
@@ -18,28 +15,37 @@ export type Options = { paths?: string[] } & {
 
 export const defaultOptions = {
   tag: 'latest',
-  run: run,
+  run: defaultCliRunner,
   npmClient: 'npm',
   prune: false,
   verbose: false,
 }
 
-export async function run (cwd: string, args: string[], opts: Options = defaultOptions) {
-  const options = { ...defaultOptions, ...opts }
-  const { verbose, npmClient } = options
+export type RunnerOptions = {
+  dir: string,
+  type?: string,
+  args?: string[],
+  options: Options,
+  defaultRunner?: typeof defaultCliRunner
+}
 
-  let cliPath: string | undefined = getCliPath(options)
+export async function defaultCliRunner (opt: RunnerOptions) {
+  const { dir, args, options } = opt
+  const opts = { ...defaultOptions, ...options }
+  const { verbose, npmClient } = opts
+
+  let cliPath: string | undefined = getCliPath(opts)
 
   if (!cliPath) {
     throw new Error(`Cannot find cli for "${npmClient}" package manager`)
   }
 
   if (verbose) {
-    console.log(`Using npmClient "${npmClient}" from ${cliPath}\nWith the following arguments: ${args}`)
+    console.warn(`Using npmClient "${npmClient}" from ${cliPath}\nWith the following arguments: ${args}`)
   }
 
   await execa(cliPath, args, {
-    cwd,
+    cwd: dir,
     stdio: 'inherit',
     preferLocal: false,
     all: true,

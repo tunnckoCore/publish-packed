@@ -4,13 +4,14 @@ dependencies:
   all-module-paths: 0.7.1
   execa: 3.2.0
   fs-extra: 7.0.1
-  getopts: 2.2.5
   nm-prune: 4.0.0
   read-pkg: 4.0.1
   rename-overwrite: 1.0.3
   rimraf-then: 1.0.1
+  sade: 1.6.1
   write-pkg: 3.2.0
 devDependencies:
+  dargs: 7.0.0
   npm-run-all: 4.1.5
   p-map-series: 2.1.0
   package-preview: 2.0.0
@@ -947,6 +948,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-mI3zP+qxke95mmE2nddsF635V+o=
+  /dargs/7.0.0:
+    dev: true
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==
   /dashdash/1.14.1:
     dependencies:
       assert-plus: 1.0.0
@@ -1517,10 +1524,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-EXr1FOzrzTfGeL0gQdeFEvOMm2mzMOglyiOXSTpPC+iAjAKftbr3jpCMWynogwYnM+eSj9sHGc6wjIcDvYiygw==
-  /getopts/2.2.5:
-    dev: false
-    resolution:
-      integrity: sha512-9jb7AW5p3in+IiJWhQiZmmwkpLaR/ccTWdWQCtZM66HJcHHLegowh4q4tSD7gouUyeNvFWRavfK9GXosQHDpFA==
   /getpass/0.1.7:
     dependencies:
       assert-plus: 1.0.0
@@ -2154,7 +2157,7 @@ packages:
     dependencies:
       level-js: 4.0.1
       level-packager: 5.1.0
-      leveldown: 5.4.0
+      leveldown: 5.4.1
       opencollective-postinstall: 2.0.2
     dev: true
     engines:
@@ -2162,7 +2165,7 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-wcak5OQeA4rURGacqS62R/xNHjCYnJSQDBOlm4KNUGJVE9bWv2B04TclqReYejN+oD65PzD4FsqeWoI5wNC5Lg==
-  /leveldown/5.4.0:
+  /leveldown/5.4.1:
     dependencies:
       abstract-leveldown: 6.2.2
       napi-macros: 2.0.0
@@ -2172,7 +2175,7 @@ packages:
       node: '>=8.6.0'
     requiresBuild: true
     resolution:
-      integrity: sha512-uKwfJT+jgXL3mdb3UR/bOaO13VX85R7yGaunK+WJNuGWSoxskp3JgYwFCKfPruulx/bVn2xI7XmyNHVQkVC/Ig==
+      integrity: sha512-3lMPc7eU3yj5g+qF1qlALInzIYnkySIosR1AsUKFjL9D8fYbTLuENBAeDRZXIG4qeWOAyqRItOoLu2v2avWiMA==
   /levelup/4.3.2:
     dependencies:
       deferred-leveldown: 5.3.0
@@ -2558,6 +2561,12 @@ packages:
     optional: true
     resolution:
       integrity: sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+  /mri/1.1.4:
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha512-6y7IjGPm8AzlvoUrwAaw1tLnUBudaS3752vcd8JtrpGGQn+rXIe63LFVHm/YMwtqAuh+LJPCFdlLYPWM1nYn6w==
   /ms/2.0.0:
     resolution:
       integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
@@ -3452,6 +3461,14 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
+  /sade/1.6.1:
+    dependencies:
+      mri: 1.1.4
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-USHm9quYNmJwFwhOnEuJohdnBhUOKV1mhL0koHSJMLJaesRX0nuDuzbWmtUBbUmXkwTalLtUBzDlEnU940BiQA==
   /safe-buffer/5.1.2:
     dev: true
     resolution:
@@ -4420,9 +4437,9 @@ specifiers:
   '@types/fs-extra': ^5.0.0
   '@types/node': ^10.9.4
   all-module-paths: ^0.7.1
+  dargs: ^7.0.0
   execa: ^3.2.0
   fs-extra: ^7.0.0
-  getopts: ^2.0.0
   nm-prune: ^4.0.0
   npm-run-all: ^4.1.2
   p-map-series: ^2.1.0
@@ -4430,6 +4447,7 @@ specifiers:
   read-pkg: ^4.0.0
   rename-overwrite: ^1.0.2
   rimraf-then: ^1.0.1
+  sade: ^1.6.1
   tape: ^4.8.0
   tape-await: ^0.1.2
   ts-node: ^8.0.0

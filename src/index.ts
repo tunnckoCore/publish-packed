@@ -6,9 +6,9 @@ import readPkg = require('read-pkg')
 import renameOverwrite = require('rename-overwrite')
 import nmPrune = require('nm-prune')
 
-import { run, defaultOptions, Options } from './run-utils'
+import { defaultCliRunner, defaultOptions, Options, RunnerOptions } from './run-utils'
 
-export default async function (pkgDir: string, opts: Options = defaultOptions) {
+export default async function (pkgDir?: string, opts: Options = defaultOptions) {
   const options = { ...defaultOptions, ...opts }
   const { tag, prune } = options
 
@@ -19,38 +19,47 @@ export default async function (pkgDir: string, opts: Options = defaultOptions) {
   }
 
   const runCli = options.run
+  const dir = pkgDir || process.cwd()
   const lockfileFlag = lockfileMap[options.npmClient]
-  const modules = path.join(pkgDir, 'node_modules')
-  const tmpModules = path.join(pkgDir, 'tmp_node_modules')
+  const modules = path.join(dir, 'node_modules')
+  const tmpModules = path.join(dir, 'tmp_node_modules')
   let publishedModules: string | null = null
 
-  await runPrepublishScript(pkgDir, runCli, options)
+  await runPrepublishScript(dir, runCli, options, defaultCliRunner)
 
   try {
     await renameOverwriteIfExists(modules, tmpModules)
 
     await runCli(
-      pkgDir,
-      ['install', '--production', '--ignore-scripts', lockfileFlag],
-      options
+      {
+        dir,
+        type: 'install',
+        args: ['install', '--production', '--ignore-scripts', lockfileFlag],
+        options,
+        defaultRunner: defaultCliRunner
+      }
     )
 
-    if (prune) await pruneNodeModules(pkgDir)
+    if (prune) await pruneNodeModules(dir)
 
-    publishedModules = path.join(pkgDir, 'lib', 'node_modules')
+    publishedModules = path.join(dir, 'lib', 'node_modules')
     await renameOverwriteIfExists(modules, publishedModules)
 
-    await hideDeps(pkgDir)
+    await hideDeps(dir)
     await runCli(
-      pkgDir,
-      ['publish', '--tag', tag],
       {
-        ...options,
-        npmClient: 'npm' // ! force using npm for publishing
+        dir: dir,
+        type: 'publish',
+        args: ['publish', '--tag', tag],
+        options: {
+          ...options,
+          npmClient: 'npm' // ! force using npm for publishing
+        },
+        defaultRunner: defaultCliRunner
       }
     )
   } finally {
-    await unhideDeps(pkgDir)
+    await unhideDeps(dir)
 
     await renameOverwriteIfExists(tmpModules, modules)
 
@@ -72,17 +81,28 @@ async function renameOverwriteIfExists (oldPath: string, newPath: string | null)
   }
 }
 
-async function runPrepublishScript (pkgDir: string, runCli: typeof run, opts: Options) {
-  const pkgJson = await readPkg({ cwd: pkgDir })
+async function runPrepublishScript (
+  dir: string,
+  runCli: typeof defaultCliRunner,
+  opts: Options,
+  defaultRunner?: typeof defaultCliRunner
+) {
+  const pkgJson = await readPkg({ cwd: dir })
 
   if (!pkgJson['scripts']) return
 
+  const runOpts = {
+    dir: dir,
+    options: opts,
+    defaultRunner
+  }
+
   if (pkgJson['scripts']['prepublish']) {
-    await runCli(pkgDir, ['run', 'prepublish'], opts)
+    await runCli({ ...runOpts, type: 'prepublish', args: ['run', 'prepublish'] })
   }
 
   if (pkgJson['scripts']['prepublishOnly']) {
-    await runCli(pkgDir, ['run', 'prepublishOnly'], opts)
+    await runCli({ ...runOpts, type: 'prepublishOnly', args: ['run', 'prepublishOnly'] })
   }
 }
 
